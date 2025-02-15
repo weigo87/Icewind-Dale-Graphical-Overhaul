@@ -70,6 +70,13 @@ BEGIN
 				PATCH_IF !(VARIABLE_IS_SET $PVR_PAGE_LIST("%pvr_page_original%")) BEGIN
 					DEFINE_ASSOCIATIVE_ARRAY PVR_PAGE_LIST BEGIN "%pvr_page_original%", "old" => "%pvr_page_original%" END
 				END
+				// #1 Delete
+//				INNER_ACTION BEGIN
+//					ACTION_IF FILE_EXISTS_IN_GAME ~%prefix_original%%pvr_page_original%.PVRZ~ BEGIN
+//						COPY_EXISTING ~%prefix_original%%pvr_page_original%.PVRZ~
+//						DELETE ~override/%prefix_original%%pvr_page_original%.PVRZ~
+//					END
+//				END
 			END
 	END
 	
@@ -89,6 +96,8 @@ BEGIN
 			END
 		END
 		
+		// delete überzählige pvrz indices
+		// erst alle pvrz löschen #1 oder die überzähligen löschen #2
 		LPF FIND_FREE_PVRZ_INDEX STR_VAR prefix = EVAL "%prefix_target%" RET free_index END
 		SORT_ARRAY_INDICES PVR_PAGE_LIST NUMERICALLY
 		PATCH_PHP_EACH PVR_PAGE_LIST AS idx => pvr_index BEGIN
@@ -97,6 +106,7 @@ BEGIN
 				SET free_index +=1
 			END
 		END
+		//#2 erst das max der neuen und dann max alt - max neu 
 		
 		PHP_EACH OFFSET_ARRAY AS offset => value BEGIN
 			SET new_value = 0
@@ -186,25 +196,6 @@ BEGIN
 		END
 		ACTION_IF FILE_EXISTS_IN_GAME ~%are2%.are~ BEGIN
 			
-			// Decompress cbf files
-			ACTION_IF GAME_IS ~iwd how totlm~ BEGIN
-				PRINT ~Decompress cbf files~
-				OUTER_SNPRINT 5 biffileres "%are2%"
-				ACTION_FOR_EACH cdnum IN CD1 CD2 CD3 CD4 CD5 BEGIN
-					ACTION_BASH_FOR ~%cdnum%/data~ ~.*?\.cbf$~ BEGIN
-						ACTION_IF FILE_CONTAINS_EVALUATED ( ~%BASH_FOR_FILESPEC%~ ~%biffileres%~) BEGIN
-							ACTION_IF !FILE_EXISTS ~DATA/%BASH_FOR_RES%.bif~ BEGIN
-								SILENT
-									DECOMPRESS_BIFF ~%BASH_FOR_FILESPEC%~
-									MOVE + ~%BASH_FOR_DIRECTORY%/fl#biffbackup_%BASH_FOR_RES%.bif~ ~DATA/%BASH_FOR_RES%.bif~
-									DELETE + ~%BASH_FOR_DIRECTORY%/fl#biffbackup_%BASH_FOR_RES%.bif~
-									MOVE + ~%BASH_FOR_DIRECTORY%/fl#biffbackup_%BASH_FOR_RES%.cbf~ ~%BASH_FOR_DIRECTORY%/%BASH_FOR_RES%.cbf~
-								VERBOSE
-							END
-						END
-					END
-				END
-			END
 			// Extended night & creatures sleep at night
 			COPY_EXISTING ~%are2%.are~ ~override~
 			PATCH_IF SOURCE_SIZE > 0x11b BEGIN // Valid size check
@@ -233,6 +224,26 @@ BEGIN
 				END
 			END
 			BUT_ONLY
+			
+			// Get files from compressed biffs
+			//code by Argent77 https://github.com/Argent77/A7-BiffedAreasFix
+			LAF a7#get_are_resources
+				INT_VAR
+					compressed_only = 1
+					bmp = 1
+					mos = 1
+					tis = 1
+					wav = 1
+					wed = 1
+				STR_VAR
+					are_regexp = EVAL "^%are2%\.are$"
+				RET_ARRAY
+					resources
+				END
+			ACTION_PHP_EACH resources AS resource => ref_count BEGIN
+				COPY_EXISTING ~%resource%~ ~override~ IF_EXISTS
+			END
+			ACTION_CLEAR_ARRAY resources
 			
 			// biff only areas with tis and pvrz files
 			OUTER_SET area_biff = 0

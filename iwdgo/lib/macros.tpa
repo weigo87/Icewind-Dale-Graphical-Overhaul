@@ -67,17 +67,18 @@ BEGIN
 			FOR ( i = 0 ; i < tiles_cnt ; ++i ) BEGIN
 				SET offset = tiles_off + tiles_length * i
 				READ_LONG offset pvr_page_original
-				PATCH_IF !(VARIABLE_IS_SET $PVR_PAGE_LIST("%pvr_page_original%")) BEGIN
+				PATCH_IF !(VARIABLE_IS_SET $PVR_PAGE_LIST("%pvr_page_original%" "old")) BEGIN
 					DEFINE_ASSOCIATIVE_ARRAY PVR_PAGE_LIST BEGIN "%pvr_page_original%", "old" => "%pvr_page_original%" END
 				END
-				// #1 Delete
-//				INNER_ACTION BEGIN
-//					ACTION_IF FILE_EXISTS_IN_GAME ~%prefix_original%%pvr_page_original%.PVRZ~ BEGIN
-//						COPY_EXISTING ~%prefix_original%%pvr_page_original%.PVRZ~
-//						DELETE ~override/%prefix_original%%pvr_page_original%.PVRZ~
-//					END
-//				END
 			END
+		// delete every existing pvrz file, because the new one can have a less number of files
+		ACTION_PHP_EACH PVR_PAGE_LIST AS idx => pvr_index BEGIN
+			ACTION_IF ( pvr_index < 10 ) BEGIN OUTER_SPRINT pvr_index_final ~0%pvr_index%~ END ELSE BEGIN OUTER_SPRINT pvr_index_final ~%pvr_index%~ END
+			ACTION_IF FILE_EXISTS_IN_GAME ~%prefix_target%%pvr_index_final%.PVRZ~ BEGIN
+				COPY_EXISTING ~%prefix_target%%pvr_index_final%.PVRZ~ ~override~
+				DELETE ~override/%prefix_target%%pvr_index_final%.PVRZ~
+			END 
+		END
 	END
 	
 	COPY ~%tis_path_original%/%tis_name_original%.tis~ ~%tis_path_target%/%tis_name_target%.tis~
@@ -96,17 +97,21 @@ BEGIN
 			END
 		END
 		
-		// delete überzählige pvrz indices
-		// erst alle pvrz löschen #1 oder die überzähligen löschen #2
-		LPF FIND_FREE_PVRZ_INDEX STR_VAR prefix = EVAL "%prefix_target%" RET free_index END
 		SORT_ARRAY_INDICES PVR_PAGE_LIST NUMERICALLY
+		SET num_to_reserve = 0
+		PATCH_PHP_EACH PVR_PAGE_LIST AS idx => pvr_index BEGIN
+			PATCH_IF ("%idx_1%" STR_EQ "new") BEGIN
+				SET num_to_reserve += 1
+			END
+		END
+		LPF FIND_FREE_PVRZ_INDEX INT_VAR num_to_reserve = "%num_to_reserve%" STR_VAR prefix = EVAL "%prefix_target%" RET free_index END
 		PATCH_PHP_EACH PVR_PAGE_LIST AS idx => pvr_index BEGIN
 			PATCH_IF ("%idx_1%" STR_EQ "new") BEGIN
 				SET $PVR_PAGE_LIST("%idx_0%" "new") = free_index
 				SET free_index +=1
 			END
+			PATCH_IF debug BEGIN PATCH_PRINT ~%idx_0%, %idx_1% => %pvr_index% : %free_index% %num_to_reserve%~ END
 		END
-		//#2 erst das max der neuen und dann max alt - max neu 
 		
 		PHP_EACH OFFSET_ARRAY AS offset => value BEGIN
 			SET new_value = 0
@@ -124,6 +129,10 @@ BEGIN
 			ACTION_IF ( dest   < 10 ) BEGIN OUTER_SPRINT dest_final   ~0%dest%~   END ELSE BEGIN OUTER_SPRINT dest_final   ~%dest%~   END
 			ACTION_IF ( FILE_EXISTS ~%tis_path_original%/%prefix_original%%source_final%.PVRZ~ ) BEGIN
 				COPY ~%tis_path_original%/%prefix_original%%source_final%.PVRZ~ ~%tis_path_target%/%prefix_target%%dest_final%.PVRZ~
+				// backup for pvrz files in override because of biffing
+				ACTION_IF FILE_EXISTS ~override/%prefix_target%%dest_final%.PVRZ~ BEGIN
+					MOVE ~override/%prefix_target%%dest_final%.PVRZ~ ~%MOD_FOLDER%/backup_ovr~
+				END 
 			END
 	END		
 END
@@ -255,7 +264,7 @@ BEGIN
 				OUTER_SPRINT biffdir ~%MOD_FOLDER%/bif/%are2%~
 				OUTER_SET area_biff = 1
 			END ELSE BEGIN
-				OUTER_SPRINT biffdir ~%MOD_FOLDER%/bif/goMAIN~
+				OUTER_SPRINT biffdir ~%MOD_FOLDER%/bif/goiwdMAIN~
 			END
 			OUTER_SPRINT temp ~%MOD_FOLDER%/bif/temp~
 			
@@ -297,7 +306,7 @@ BEGIN
 								tis_path_target     = EVAL "%biffdir%"
 						END
 						LAF ~BACKUP_BIFFING~ STR_VAR ext = ~.tis~ END
-						LAF ~BACKUP_BIFFING~ STR_VAR ext = ~.pvrz~ END
+//						LAF ~BACKUP_BIFFING~ STR_VAR ext = ~.pvrz~ END
 					END
 				END
 				OUTER_SET day = 1
@@ -311,7 +320,7 @@ BEGIN
 				LAF ~BACKUP_BIFFING~ STR_VAR ext = ~.mos~ END
 			END ELSE BEGIN
 				ACTION_TRY
-					ACTION_IF (area_biff = 1) AND (day = 1) BEGIN
+					ACTION_IF (area_biff = 1) AND (day = 1) AND FILE_EXISTS_IN_GAME ~%are2%.mos~ BEGIN
 						COPY_EXISTING ~%are2%.mos~ ~%biffdir%~
 						LPM ~DEBUG~
 						LAF ~BACKUP_BIFFING~ STR_VAR ext = ~.mos~ END
@@ -397,8 +406,8 @@ BEGIN
 								tis_name_target     = EVAL "%are2%N"
 								tis_path_target     = EVAL "%biffdir%"
 						END
-						LAF ~BACKUP_BIFFING~ STR_VAR ext = ~.tis~ END
-						LAF ~BACKUP_BIFFING~ STR_VAR ext = ~.pvrz~ END
+						LAF ~BACKUP_BIFFING~ STR_VAR ext = ~N.tis~ END
+//						LAF ~BACKUP_BIFFING~ STR_VAR ext = ~.pvrz~ END
 					END
 				END
 				OUTER_SET night = 1
@@ -420,7 +429,8 @@ BEGIN
 							DEFAULT
 								PRINT ~Couldn't copy %are%N.mos from bif file~
 						END
-					END ELSE BEGIN
+					END 
+					ACTION_IF FILE_EXISTS_IN_GAME ~%are2%.mos~ BEGIN
 						ACTION_TRY
 							COPY_EXISTING ~%are2%.mos~ ~%biffdir%/%are2%N.mos~
 								LPM ~DEBUG~
@@ -547,13 +557,13 @@ BEGIN
 	// tis files for water overlays
 	ACTION_BASH_FOR ~%MOD_FOLDER%/base/tbcN/ys~ ~^.+\.tis$~ BEGIN
 		ACTION_IF NOT FILE_EXISTS_IN_GAME ~%BASH_FOR_FILE%~ BEGIN
-			COPY + ~%MOD_FOLDER%/base/tbcN/ys/%BASH_FOR_FILE%~ ~%MOD_FOLDER%/bif/goMAIN~
+			COPY + ~%MOD_FOLDER%/base/tbcN/ys/%BASH_FOR_FILE%~ ~%MOD_FOLDER%/bif/goiwdMAIN~
 		END
 	END
 	
 	// bam animations
 	ACTION_BASH_FOR ~%MOD_FOLDER%/base/bam~ ~^.+\.bam$~ BEGIN
-		COPY + ~%MOD_FOLDER%/base/bam/%BASH_FOR_FILE%~ ~%MOD_FOLDER%/bif/goMAIN~
+		COPY + ~%MOD_FOLDER%/base/bam/%BASH_FOR_FILE%~ ~%MOD_FOLDER%/bif/goiwdMAIN~
 	END
 	
 	//	IWD1 Areas

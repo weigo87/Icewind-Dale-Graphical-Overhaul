@@ -1,0 +1,36 @@
+PATCH_DEFINE_ARRAY x_coord BEGIN 274 221 265 431 472 435 381 297 796 790 882 906 918 882 793 825 812 846 910 942 928 962 1033 1063 1054 1088 846 877 867 901 957 988 979 1012 1080 1111 1102 1135 129 146 162 196 213 228 811 END
+PATCH_DEFINE_ARRAY y_coord BEGIN 319 360 429 408 373 303 299 430 326 345 361 370 334 302 550 547 608 598 524 522 584 574 505  502  562  553  678 676 736 727 653 650 710 700  638  631  692  682  560 557 554 547 545 542 368 END
+PATCH_PHP_EACH x_coord AS index => x BEGIN
+	LPM ~DELETE_EXISTING_ANIMATIONS~
+	LPF fj_are_structure
+	INT_VAR
+		fj_loc_x = $x_coord("%index%")
+		fj_loc_y = $y_coord("%index%")
+		fj_schedule =  0b111000000000000000111111 //Hours 22.00 - 07.00
+		fj_flags = 0b00000000000000000001000001100011	// Visible, blend colours, not covered by wall, don't remove in combat
+		STR_VAR
+		fj_structure_type = animation
+		fj_name = FLAME2N
+		fj_bam_resref = FLAME2N //bgrd
+	END
+END
+LPM ~CLEAR_ARRAY~
+// mirror in water
+PATCH_DEFINE_ARRAY x_coord BEGIN 274 436 381 END
+PATCH_DEFINE_ARRAY y_coord BEGIN 356 341 336 END
+PATCH_PHP_EACH x_coord AS index => x BEGIN
+	LPM ~DELETE_EXISTING_ANIMATIONS~
+	LPF fj_are_structure
+	INT_VAR
+		fj_loc_x = $x_coord("%index%")
+		fj_loc_y = $y_coord("%index%")
+		fj_schedule =  0b111000000000000000111111 //Hours 22.00 - 07.00
+		fj_flags = 0b00000000000000000001100001100011	// Visible, blend colours, not covered by wall, don't remove in combat
+		fj_transparent = 90
+		STR_VAR
+		fj_structure_type = animation
+		fj_name = FLAME2N
+		fj_bam_resref = FLAME2N //bgrd
+	END
+END
+LPM ~CLEAR_ARRAY~

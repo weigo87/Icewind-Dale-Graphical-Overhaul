@@ -1,0 +1,165 @@
+WRITE_BYTE 0x48 (THIS | BIT6 | BIT1 | BIT2 | BIT0) // Toggle extended night flag (BIT6) and day/night flag (BIT1) and weather flag (BIT2)
+GET_OFFSET_ARRAY actors 0x54 4 0x58 2 0 0 0x110		// turn off creatures at night time
+PHP_EACH actors AS i => off BEGIN
+	READ_ASCII off + 0x80 cre_resref
+	TO_LOWER cre_resref
+	PATCH_IF VARIABLE_IS_SET $turn_off_at_night("%cre_resref%") BEGIN
+		WRITE_LONG off + 0x40 0x1ffe0 // 05:30 to 17:29
+	END
+END
+
+READ_LONG 0xb0 offset
+FOR( i = SHORT_AT 0xac ; i ; --i )BEGIN
+	SET off = offset + (i - 1) * 0x4c
+	READ_ASCII off anim_name
+	PATCH_PRINT ~%anim_name%~
+	PATCH_IF (~%anim_name%~ STR_EQ ~5101MS1~) OR (~%anim_name%~ STR_EQ ~5101MS2~) OR (~%anim_name%~ STR_EQ ~5101MS3~) BEGIN
+		LPF fj_are_structure
+			INT_VAR 
+			fj_delete_mode = i - 1
+			STR_VAR 
+			fj_structure_type = animation
+		END
+	END
+END
+
+LPF fj_are_structure
+	INT_VAR
+		fj_loc_x       = 646
+		fj_loc_y       = 446
+//		fj_schedule    = 0b111000000000000000111111 //22 - 7
+		fj_schedule    = 0b000111111111111111000000 //7 - 22
+		fj_flags       = 0b00000000000000000001000000000001  //is showen, don't remove in combat
+		fj_loc_z       = 30		
+		STR_VAR
+		fj_structure_type = animation
+		fj_name	= ~5101MS1~
+		fj_bam_resref = ~5101MS1~
+
+END
+LPF fj_are_structure
+	INT_VAR
+		fj_loc_x       = 646
+		fj_loc_y       = 446
+		fj_schedule    = 0b111000000000000000111111 //22 - 7
+//		fj_schedule    = 0b000111111111111111000000 //7 - 22
+		fj_flags       = 0b00000000000000000001000000000001  //is showen, don't remove in combat
+		fj_loc_z       = 30		
+		STR_VAR
+		fj_structure_type = animation
+		fj_name	= ~5101MS1N~
+		fj_bam_resref = ~5101MS1N~
+
+END
+LPF fj_are_structure
+	INT_VAR
+		fj_loc_x       = 245
+		fj_loc_y       = 279
+//		fj_schedule    = 0b111000000000000000111111 //22 - 7
+		fj_schedule    = 0b000111111111111111000000 //7 - 22
+		fj_flags       = 0b00000000000000000001000000000001  //is showen, don't remove in combat
+		fj_loc_z       = 30		
+		STR_VAR
+		fj_structure_type = animation
+		fj_name	= ~5101MS2~
+		fj_bam_resref = ~5101MS2~
+
+END
+LPF fj_are_structure
+	INT_VAR
+		fj_loc_x       = 245
+		fj_loc_y       = 279
+		fj_schedule    = 0b111000000000000000111111 //22 - 7
+//		fj_schedule    = 0b000111111111111111000000 //7 - 22
+		fj_flags       = 0b00000000000000000001000000000001  //is showen, don't remove in combat
+		fj_loc_z       = 30		
+		STR_VAR
+		fj_structure_type = animation
+		fj_name	= ~5101MS2N~
+		fj_bam_resref = ~5101MS2N~
+
+END
+LPF fj_are_structure
+	INT_VAR
+		fj_loc_x       = 249
+		fj_loc_y       = 615
+//		fj_schedule    = 0b111000000000000000111111 //22 - 7
+		fj_schedule    = 0b000111111111111111000000 //7 - 22
+		fj_flags       = 0b00000000000000000001000000000001  //is showen, don't remove in combat
+		fj_loc_z       = 30		
+		STR_VAR
+		fj_structure_type = animation
+		fj_name	= ~5101MS3~
+		fj_bam_resref = ~5101MS3~
+
+END
+LPF fj_are_structure
+	INT_VAR
+		fj_loc_x       = 249
+		fj_loc_y       = 615
+		fj_schedule    = 0b111000000000000000111111 //22 - 7
+//		fj_schedule    = 0b000111111111111111000000 //7 - 22
+		fj_flags       = 0b00000000000000000001000000000001  //is showen, don't remove in combat
+		fj_loc_z       = 30		
+		STR_VAR
+		fj_structure_type = animation
+		fj_name	= ~5101MS3N~
+		fj_bam_resref = ~5101MS3N~
+
+END
+LPF fj_are_structure
+	INT_VAR
+		fj_loc_x       = 712
+		fj_loc_y       = 638
+//		fj_schedule    = 0b111000000000000000111111 //22 - 7
+		fj_schedule    = 0b000111111111111111000000 //7 - 22
+		fj_flags       = 0b00000000000000000001000000000001  //is showen, don't remove in combat
+		fj_loc_z       = 30		
+		STR_VAR
+		fj_structure_type = animation
+		fj_name	= ~5101MS4~
+		fj_bam_resref = ~5101MS3~
+
+END
+LPF fj_are_structure
+	INT_VAR
+		fj_loc_x       = 712
+		fj_loc_y       = 638
+		fj_schedule    = 0b111000000000000000111111 //22 - 7
+//		fj_schedule    = 0b000111111111111111000000 //7 - 22
+		fj_flags       = 0b00000000000000000001000000000001  //is showen, don't remove in combat
+		fj_loc_z       = 30		
+		STR_VAR
+		fj_structure_type = animation
+		fj_name	= ~5101MS4N~
+		fj_bam_resref = ~5101MS3N~
+
+END
+LPF fj_are_structure
+	INT_VAR
+		fj_loc_x       = 320
+		fj_loc_y       = 474
+//		fj_schedule    = 0b111000000000000000111111 //22 - 7
+		fj_schedule    = 0b000111111111111111000000 //7 - 22
+		fj_flags       = 0b00000000000000000001000000000001  //is showen, don't remove in combat
+		fj_loc_z       = 30		
+		STR_VAR
+		fj_structure_type = animation
+		fj_name	= ~5101MS5~
+		fj_bam_resref = ~5101MS3~
+
+END
+LPF fj_are_structure
+	INT_VAR
+		fj_loc_x       = 320
+		fj_loc_y       = 474
+		fj_schedule    = 0b111000000000000000111111 //22 - 7
+//		fj_schedule    = 0b000111111111111111000000 //7 - 22
+		fj_flags       = 0b00000000000000000001000000000001  //is showen, don't remove in combat
+		fj_loc_z       = 30		
+		STR_VAR
+		fj_structure_type = animation
+		fj_name	= ~5101MS5N~
+		fj_bam_resref = ~5101MS3N~
+
+END

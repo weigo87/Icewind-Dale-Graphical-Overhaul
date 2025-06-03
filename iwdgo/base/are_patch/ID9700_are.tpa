@@ -1,0 +1,71 @@
+PATCH_DEFINE_ARRAY x_coord BEGIN 675 END
+PATCH_DEFINE_ARRAY y_coord BEGIN 668 END
+PATCH_PHP_EACH x_coord AS index => x BEGIN
+	LPM ~DELETE_EXISTING_ANIMATIONS~
+	LPF fj_are_structure
+	INT_VAR
+		fj_loc_x = $x_coord("%index%")
+		fj_loc_y = $y_coord("%index%")
+		fj_schedule =  0b000111111111111111000000 //Hours 7.00 - 22.00
+		fj_flags = 0b0000000000000000001000000000101	// Visible, blend colours, not covered by wall, don't remove in combat
+		STR_VAR
+		fj_structure_type = animation
+		fj_name = 9700MS2
+		fj_bam_resref = 9700MS2 //bgrd
+	END
+END
+LPM ~CLEAR_ARRAY~
+
+PATCH_DEFINE_ARRAY x_coord BEGIN 675 END
+PATCH_DEFINE_ARRAY y_coord BEGIN 668 END
+PATCH_PHP_EACH x_coord AS index => x BEGIN
+//	LPM ~DELETE_EXISTING_ANIMATIONS~
+	LPF fj_are_structure
+	INT_VAR
+		fj_loc_x = $x_coord("%index%")
+		fj_loc_y = $y_coord("%index%")
+		fj_schedule = 0b111000000000000000111111 //Hours 22.00 - 07.00
+		fj_flags = 0b0000000000000000001000000000101	// Visible, blend colours, not covered by wall, don't remove in combat
+		STR_VAR
+		fj_structure_type = animation
+		fj_name = 9700MS2N
+		fj_bam_resref = 9700MS2N //bgrd
+	END
+END
+LPM ~CLEAR_ARRAY~
+
+PATCH_DEFINE_ARRAY x_coord BEGIN 1972 END
+PATCH_DEFINE_ARRAY y_coord BEGIN 698 END
+PATCH_PHP_EACH x_coord AS index => x BEGIN
+	LPM ~DELETE_EXISTING_ANIMATIONS~
+	LPF fj_are_structure
+	INT_VAR
+		fj_loc_x = $x_coord("%index%")
+		fj_loc_y = $y_coord("%index%")
+		fj_schedule =  0b000111111111111111000000 //Hours 7.00 - 22.00
+		fj_flags = 0b0000000000000000001000000000101	// Visible, blend colours, not covered by wall, don't remove in combat
+		STR_VAR
+		fj_structure_type = animation
+		fj_name = 9700MS1
+		fj_bam_resref = 9700MS1 //bgrd
+	END
+END
+LPM ~CLEAR_ARRAY~
+
+PATCH_DEFINE_ARRAY x_coord BEGIN 1972 END
+PATCH_DEFINE_ARRAY y_coord BEGIN 698 END
+PATCH_PHP_EACH x_coord AS index => x BEGIN
+//	LPM ~DELETE_EXISTING_ANIMATIONS~
+	LPF fj_are_structure
+	INT_VAR
+		fj_loc_x = $x_coord("%index%")
+		fj_loc_y = $y_coord("%index%")
+		fj_schedule = 0b111000000000000000111111 //Hours 22.00 - 07.00
+		fj_flags = 0b0000000000000000001000000000101	// Visible, blend colours, not covered by wall, don't remove in combat
+		STR_VAR
+		fj_structure_type = animation
+		fj_name = 9700MS1N
+		fj_bam_resref = 9700MS1N //bgrd
+	END
+END
+LPM ~CLEAR_ARRAY~

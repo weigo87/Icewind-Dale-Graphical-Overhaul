@@ -272,6 +272,11 @@ BEGIN
 			OUTER_SET day = 0
 			OUTER_SET night = 0
 			
+			// baf + bcs patches
+			ACTION_IF FILE_EXISTS ~%MOD_FOLDER%/base/baf_patch/%are%_baf.tpa~ BEGIN // append area scripts ...
+				INCLUDE ~%MOD_FOLDER%/base/baf_patch/%are%_baf.tpa~
+			END
+			
 			//**************************************************
 			// Day files
 			//**************************************************

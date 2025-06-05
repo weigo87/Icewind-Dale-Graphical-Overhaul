@@ -1,0 +1,20 @@
+<<<<<<<< .../%MOD_FOLDER%/inlined_ID9700.baf
+IF
+	OpenState("AR9700_Door2",TRUE)
+THEN
+	RESPONSE #100
+	SetGlobal("door2_ID9700_open","%AnaurochCastle_OuterCourtyard%",1)
+END
+
+IF
+	OpenState("AR9700_Door2",FALSE)
+THEN
+	RESPONSE #100
+	SetGlobal("door2_ID9700_open","%AnaurochCastle_OuterCourtyard%",0)
+END
+>>>>>>>> 
+
+EXTEND_BOTTOM ~%are2%.bcs~ ~.../%MOD_FOLDER%/inlined_ID9700.baf~
+	EVALUATE_BUFFER
+
+

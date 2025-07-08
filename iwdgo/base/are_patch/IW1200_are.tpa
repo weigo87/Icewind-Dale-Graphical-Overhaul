@@ -1,0 +1,39 @@
+PATCH_DEFINE_ARRAY x_coord BEGIN 2953 2966 END
+PATCH_DEFINE_ARRAY y_coord BEGIN 2185 2181 END
+PATCH_PHP_EACH x_coord AS index => x BEGIN
+	LPM ~DELETE_EXISTING_ANIMATIONS~
+	LPF fj_are_structure
+	INT_VAR
+		fj_loc_x = $x_coord("%index%")
+		fj_loc_y = $y_coord("%index%")
+		fj_loc_z = 100
+		fj_schedule =  0b000111111111111111000000 //Hours 7.00 - 22.00
+		fj_flags = 0b0000000000000000001000000000111	// Visible, blend colours, not covered by wall, don't remove in combat
+		fj_bam_seq = 0
+		STR_VAR
+		fj_structure_type = animation
+		fj_name = SMOKESML
+		fj_bam_resref = SMOKESML //bgrd
+	END
+END
+LPM ~CLEAR_ARRAY~
+
+PATCH_DEFINE_ARRAY x_coord BEGIN 2953 2966 END
+PATCH_DEFINE_ARRAY y_coord BEGIN 2185 2181 END
+PATCH_PHP_EACH x_coord AS index => x BEGIN
+//	LPM ~DELETE_EXISTING_ANIMATIONS~
+	LPF fj_are_structure
+	INT_VAR
+		fj_loc_x = $x_coord("%index%")
+		fj_loc_y = $y_coord("%index%")
+		fj_loc_z = 100
+		fj_schedule = 0b111000000000000000111111 //Hours 22.00 - 07.00
+		fj_flags = 0b0000000000000000001000000000111	// Visible, blend colours, not covered by wall, don't remove in combat
+		fj_bam_seq = 0
+		STR_VAR
+		fj_structure_type = animation
+		fj_name = SMOKESMN
+		fj_bam_resref = SMOKESMN //bgrd
+	END
+END
+LPM ~CLEAR_ARRAY~

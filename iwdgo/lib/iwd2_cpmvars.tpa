@@ -38,7 +38,7 @@ ACTION_IF GAME_IS "iwd2" BEGIN
 	OUTER_SPRINT "WanderingVillage" "AR5000"
 	OUTER_SPRINT "EdgeoftheFellwood" "AR5001"
 	OUTER_SPRINT "LimhasMarquee" "AR5002"
-	OUTER_SPRINT "Coldmarshwes" "AR5004"
+	OUTER_SPRINT "Coldmarshes" "AR5004"
 	OUTER_SPRINT "IceLake" "AR5005"
 	OUTER_SPRINT "FellWood_Beginning" "AR5010"
 	OUTER_SPRINT "FellWood_TheCircleofStones" "AR5011"

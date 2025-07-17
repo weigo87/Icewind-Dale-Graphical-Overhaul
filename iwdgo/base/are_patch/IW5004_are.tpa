@@ -1,0 +1,45 @@
+PATCH_DEFINE_ARRAY x_coord    BEGIN 3179    3257    3336    3417    3152    3240    3333    3428    3119    3218    3316    3412    3104    3198    3286    3383    END
+PATCH_DEFINE_ARRAY y_coord    BEGIN 888     902     913     933     920     939     958     975     969     986     1005    1023    1024    1038    1062    1076    END
+PATCH_DEFINE_ARRAY z_coord    BEGIN 20      20      20      20      20      20      20      20      20      20      20      20      20      20      20      20      END
+PATCH_DEFINE_ARRAY name       BEGIN ROCK_4A ROCK_4B ROCK_4C ROCK_4D ROCK_3A ROCK_3B ROCK_3C ROCK_3D ROCK_2A ROCK_2B ROCK_2C ROCK_2D ROCK_1A ROCK_1B ROCK_1C ROCK_1D END
+PATCH_DEFINE_ARRAY bam_resref BEGIN 5004R13 5004R14 5004R15 5004R16 5004R09 5004R10 5004R11 5004R12 5004R05 5004R06 5004R07 5004R08 5004R01 5004R02 5004R03 5004R04 END
+PATCH_PHP_EACH x_coord AS index => x BEGIN
+	LPM ~DELETE_EXISTING_ANIMATIONS~
+	LPF fj_are_structure
+	INT_VAR
+		fj_loc_x = $x_coord("%index%")
+		fj_loc_y = $y_coord("%index%")
+		fj_loc_z = $z_coord("%index%")
+		fj_schedule =  0b000111111111111111000000 //Hours 7.00 - 22.00
+		fj_flags = 0b0000000000000000001000000000101	// Visible, blend colours, not covered by wall, don't remove in combat
+		fj_bam_seq = 0
+		STR_VAR
+		fj_structure_type = animation
+		fj_name = $name("%index%")
+		fj_bam_resref = $bam_resref("%index%") //bgrd
+	END
+END
+LPM ~CLEAR_ARRAY~
+
+PATCH_DEFINE_ARRAY x_coord    BEGIN 3179     3257     3336     3417     3152     3240     3333     3428     3119     3218     3316     3412     3104     3198     3286     3383     END
+PATCH_DEFINE_ARRAY y_coord    BEGIN 888      902      913      933      920      939      958      975      969      986      1005     1023     1024     1038     1062     1076     END
+PATCH_DEFINE_ARRAY z_coord    BEGIN 20       20       20       20       20       20       20       20       20       20       20       20       20       20       20       20       END
+PATCH_DEFINE_ARRAY name       BEGIN ROCK_4AN ROCK_4BN ROCK_4CN ROCK_4DN ROCK_3AN ROCK_3BN ROCK_3CN ROCK_3DN ROCK_2AN ROCK_2BN ROCK_2CN ROCK_2DN ROCK_1AN ROCK_1BN ROCK_1CN ROCK_1DN END
+PATCH_DEFINE_ARRAY bam_resref BEGIN 5004R13N 5004R14N 5004R15N 5004R16N 5004R09N 5004R10N 5004R11N 5004R12N 5004R05N 5004R06N 5004R07N 5004R08N 5004R01N 5004R02N 5004R03N 5004R04N END
+PATCH_PHP_EACH x_coord AS index => x BEGIN
+//	LPM ~DELETE_EXISTING_ANIMATIONS~
+	LPF fj_are_structure
+	INT_VAR
+		fj_loc_x = $x_coord("%index%")
+		fj_loc_y = $y_coord("%index%")
+		fj_loc_z = $z_coord("%index%")
+		fj_schedule = 0b111000000000000000111111 //Hours 22.00 - 07.00
+		fj_flags = 0b0000000000000000001000000000101	// Visible, blend colours, not covered by wall, don't remove in combat
+		fj_bam_seq = 0
+		STR_VAR
+		fj_structure_type = animation
+		fj_name = $name("%index%")
+		fj_bam_resref = $bam_resref("%index%") //bgrd
+	END
+END
+LPM ~CLEAR_ARRAY~

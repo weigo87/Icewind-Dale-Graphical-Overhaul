@@ -216,7 +216,7 @@ ACTION_DEFINE_ASSOCIATIVE_ARRAY remapped_tis BEGIN
 	"IW5000" => "%WanderingVillage%"
 	"IW5001" => "%EdgeoftheFellwood%"
 	"IW5002" => "%LimhasMarquee%"
-	"IW5004" => "%Coldmarshwes%"
+	"IW5004" => "%Coldmarshes%"
 	"IW5005" => "%IceLake%"
 	"IW5010" => "%FellWood_Beginning%"
 	"IW5011" => "%FellWood_TheCircleofStones%"

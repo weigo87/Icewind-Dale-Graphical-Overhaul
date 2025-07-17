@@ -38,7 +38,7 @@ ACTION_IF GAME_IS "eet" BEGIN
 	OUTER_SPRINT "WanderingVillage" "IW5000"
 	OUTER_SPRINT "EdgeoftheFellwood" "IW5001"
 	OUTER_SPRINT "LimhasMarquee" "IW5002"
-	OUTER_SPRINT "Coldmarshwes" "IW5004"
+	OUTER_SPRINT "Coldmarshes" "IW5004"
 	OUTER_SPRINT "IceLake" "IW5005"
 	OUTER_SPRINT "FellWood_Beginning" "IW5010"
 	OUTER_SPRINT "FellWood_TheCircleofStones" "IW5011"

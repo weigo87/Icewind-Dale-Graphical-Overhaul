@@ -1,0 +1,5 @@
+// Add the night stones for the barbarian stone door riddle
+COPY_EXISTING ~%Coldmarshes%.BCS~ ~override~
+	DECOMPILE_AND_PATCH BEGIN
+		REPLACE_TEXTUALLY ~\(^.*StaticSequence."ROCK_[1-4][A-D]\)\(.*$\)~ ~\1\2%LNL%\1N\2~
+	END

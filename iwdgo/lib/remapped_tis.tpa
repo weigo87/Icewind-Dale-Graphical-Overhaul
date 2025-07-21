@@ -243,7 +243,7 @@ ACTION_DEFINE_ASSOCIATIVE_ARRAY remapped_tis BEGIN
 	"IW5101" => "%RiverCaves%"
 	"IW5102" => "%RiverCaves_Exit%"
 	"IW5200" => "%BlackRavenMonastry_Exterior%"
-	"IW5201" => "%BlackRavenMonastry_MainFloor"
+	"IW5201" => "%BlackRavenMonastry_MainFloor%"
 	"IW5202" => "%BlackRavenMonastry_Basement%"
 	"IW5203" => "%BlackRavenMonastry_TheRavenTomb%"
 	"IW5300" => "%Underdark%"

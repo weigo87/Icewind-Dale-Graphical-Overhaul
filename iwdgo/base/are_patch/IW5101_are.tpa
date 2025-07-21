@@ -1,0 +1,36 @@
+PATCH_DEFINE_ARRAY x_coord BEGIN 233  342  229 269 308 532 662 793 926 669 931 1178 940 1054 1239 803 162 310 1397 1588 1779 1901 2017 2134 1746 2257 2484 END
+PATCH_DEFINE_ARRAY y_coord BEGIN 1096 1161 961 832 700 630 707 785 864 517 673 659  517 426  405  245 374 255 311  307  388  461  530  599  548  406  447  END
+PATCH_PHP_EACH x_coord AS index => x BEGIN
+	LPM ~DELETE_EXISTING_ANIMATIONS~
+	LPF fj_are_structure
+	INT_VAR
+		fj_loc_x = $x_coord("%index%")+1
+		fj_loc_y = $y_coord("%index%")-11
+		fj_schedule = 0b111111111111111111111111 //Hours 22.00 - 07.00
+		fj_flags = 0b00000000000000000001000001100011	// Visible, blend colours, not covered by wall, don't remove in combat
+		STR_VAR
+		fj_structure_type = animation
+		fj_name = FIRE_4WS
+		fj_bam_resref = FIRE_4WS //bgrd
+	END
+END
+LPM ~CLEAR_ARRAY~
+
+PATCH_DEFINE_ARRAY x_coord BEGIN 1404 1179 1128 1242 1006 892 2028 2578 713 706 969 1406 1789 2340 532  665  END
+PATCH_DEFINE_ARRAY y_coord BEGIN 636  817  628  538  397  488 769  598  483 673 828 440  669  553  1141 1084 END
+PATCH_PHP_EACH x_coord AS index => x BEGIN
+	LPM ~DELETE_EXISTING_ANIMATIONS~
+	LPF fj_are_structure
+	INT_VAR
+		fj_loc_x = $x_coord("%index%")+1
+		fj_loc_y = $y_coord("%index%")-11
+		fj_schedule = 0b111111111111111111111111 //Hours 22.00 - 07.00
+		fj_flags = 0b00000000000000000001000001100011	// Visible, blend colours, not covered by wall, don't remove in combat
+		STR_VAR
+		fj_structure_type = animation
+		fj_name = FIRE_4WS
+		fj_bam_resref = FIRE_4WS //bgrd
+	END
+END
+LPM ~CLEAR_ARRAY~
+

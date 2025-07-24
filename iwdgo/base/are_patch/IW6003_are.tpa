@@ -1,0 +1,17 @@
+PATCH_DEFINE_ARRAY x_coord BEGIN 115 120 230 234 239 234 335 340 345 340 430 435 505 510 505 724 735 736 725 792 797 802 797 763 775 776 765 END
+PATCH_DEFINE_ARRAY y_coord BEGIN 289 293 263 259 263 266 260 257 261 263 280 282 240 242 246 272 270 276 278 261 257 261 265 372 370 376 379 END
+PATCH_PHP_EACH x_coord AS index => x BEGIN
+	LPM ~DELETE_EXISTING_ANIMATIONS~
+	LPF fj_are_structure
+	INT_VAR
+		fj_loc_x = $x_coord("%index%")
+		fj_loc_y = $y_coord("%index%")
+		fj_schedule = 0b111111111111111111111111 //Hours 22.00 - 07.00
+		fj_flags = 0b00000000000000000001000001100011	// Visible, blend colours, not covered by wall, don't remove in combat
+		STR_VAR
+		fj_structure_type = animation
+		fj_name = FLAME2N
+		fj_bam_resref = FLAME2N //bgrd
+	END
+END
+LPM ~CLEAR_ARRAY~

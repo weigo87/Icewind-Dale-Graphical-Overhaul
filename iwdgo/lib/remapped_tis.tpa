@@ -200,7 +200,7 @@ ACTION_DEFINE_ASSOCIATIVE_ARRAY remapped_tis BEGIN
 	"IW2001" => "%LoggingVillage_EmmaMoonblade%"
 	"IW2002" => "%LoggingVillage_VreksCave%"
 	"IW2100" => "%ShaengarnePass_GaernatSharptooth%"
-	"IW2101" => "%ShaengarnePass%_Dam"
+	"IW2101" => "%ShaengarnePass_Dam%"
 	"IW2102" => "%ShaengarneBridge%"
 	"IW3000" => "%HordeFortressGates%"
 	"IW3001" => "%HordeFortress_GoblinsWarren_L1%"

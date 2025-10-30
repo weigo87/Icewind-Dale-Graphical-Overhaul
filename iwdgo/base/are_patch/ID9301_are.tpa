@@ -1,5 +1,10 @@
 WRITE_BYTE 0x48 (THIS | BIT6 | BIT1) // Toggle extended night flag (BIT6) and day/night flag (BIT1) and weather flag (BIT2)
-GET_OFFSET_ARRAY actors 0x54 4 0x58 2 0 0 0x110		// turn off creatures at night time
+// IWD2 has area v9.1 version
+PATCH_IF GAME_IS ~iwd2~ BEGIN
+	GET_OFFSET_ARRAY actors 0x64 4 0x68 2 0 0 0x110		// turn off creatures at night time
+END ELSE BEGIN // v1.0
+	GET_OFFSET_ARRAY actors 0x54 4 0x58 2 0 0 0x110		// turn off creatures at night time
+END
 PHP_EACH actors AS i => off BEGIN
 	READ_ASCII off + 0x80 cre_resref
 	TO_LOWER cre_resref

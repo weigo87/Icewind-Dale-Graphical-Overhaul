@@ -32,7 +32,7 @@ BEGIN
 
   COPY_EXISTING_REGEXP ~%are_regexp%~ ~override~
     READ_ASCII 0x00 sig (8)
-    PATCH_IF (~%sig%~ STR_EQ ~AREAV1.0~) BEGIN
+    PATCH_IF (~%sig%~ STR_EQ ~AREAV1.0~) OR (~%sig%~ STR_EQ ~AREAV9.1~) BEGIN
       // bmp
       PATCH_IF (bmp) BEGIN
         PATCH_FOR_EACH suffix IN ~HT~ ~LM~ ~LN~ ~SR~ BEGIN

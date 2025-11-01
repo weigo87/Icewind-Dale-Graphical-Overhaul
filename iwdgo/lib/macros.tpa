@@ -223,7 +223,11 @@ BEGIN
 			COPY_EXISTING ~%are2%.are~ ~override~
 			PATCH_IF SOURCE_SIZE > 0x11b BEGIN // Valid size check
 				PATCH_IF (((BYTE_AT 0x48) << 7) & BIT7) BEGIN // Toggle only outdoor areas
-					WRITE_BYTE 0x48 (THIS | BIT6 | BIT1 | BIT2) // Toggle extended night flag (BIT6) and day/night flag (BIT1) and weather flag (BIT2)
+					PATCH_IF GAME_IS ~iwd2~ BEGIN // IWD2 & IWD2EE don't use BIT6 flag for extended
+						WRITE_BYTE 0x48 (THIS BAND BNOT BIT6 | BIT1 | BIT2 ) // Toggle extended night flag off (BIT6) and day/night flag (BIT1) and weather flag (BIT2)
+					END ELSE BEGIN
+						WRITE_BYTE 0x48 (THIS | BIT6 | BIT1 | BIT2) // Toggle extended night flag (BIT6) and day/night flag (BIT1) and weather flag (BIT2)
+					END
 					// IWD2 has area v9.1 version
 					PATCH_IF GAME_IS ~iwd2~ BEGIN
 						GET_OFFSET_ARRAY actors 0x64 4 0x68 2 0 0 0x110		// turn off creatures at night time
@@ -339,8 +343,8 @@ BEGIN
 			
 			// day mos file
 			
-			ACTION_IF FILE_EXISTS ~%MOD_FOLDER%/base/mbcD/%ee%/%are%/%are%.mos~ BEGIN
-				COPY ~%MOD_FOLDER%/base/mbcD/%ee%/%are%/%are%.mos~ ~%biffdir%/%are2%.mos~
+			ACTION_IF FILE_EXISTS ~%MOD_FOLDER%/base/mbcD/%ee%/%are%.mos~ BEGIN
+				COPY ~%MOD_FOLDER%/base/mbcD/%ee%/%are%.mos~ ~%biffdir%/%are2%.mos~
 					LPM ~DEBUG~
 				LAF ~BACKUP_BIFFING~ STR_VAR ext = ~.mos~ END
 			END ELSE BEGIN
@@ -439,8 +443,8 @@ BEGIN
 			END
 			
 			// night mos
-			ACTION_IF FILE_EXISTS ~%MOD_FOLDER%/base/mbcN/%ee%/%are%N/%are%N.mos~ BEGIN						
-				COPY ~%MOD_FOLDER%/base/mbcN/%ee%/%are%N/%are%N.mos~ ~%biffdir%/%are2%N.mos~
+			ACTION_IF FILE_EXISTS ~%MOD_FOLDER%/base/mbcN/%ee%/%are%N.mos~ BEGIN						
+				COPY ~%MOD_FOLDER%/base/mbcN/%ee%/%are%N.mos~ ~%biffdir%/%are2%N.mos~
 					LPM ~DEBUG~
 				LAF ~BACKUP_BIFFING~ STR_VAR ext = ~N.mos~ END
 			END ELSE BEGIN

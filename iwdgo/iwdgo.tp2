@@ -1,10 +1,13 @@
-BACKUP ~iwdgo/backup~
+BACKUP ~weidu_external/backup/iwdgo/~
 AUTHOR ~Weigo~
-VERSION ~v0.1 ALPHA~
+VERSION ~v1.0~
 
 //README ~iwdgo/readme/readme.html~
 
 ALWAYS
+	OUTER_SPRINT workspace "weidu_external/workspace/%MOD_FOLDER%"
+    MKDIR "%workspace%"
+	
 	INCLUDE ~%MOD_FOLDER%/lib/a7_tools.tpa~
 	INCLUDE ~%MOD_FOLDER%/lib/macros.tpa~
 	INCLUDE ~%MOD_FOLDER%/lib/alter_searchmap.tpa~
@@ -20,29 +23,10 @@ ALWAYS
 		OUTER_SPRINT ee ~ee~
 	END
 
-	ACTION_IF GAME_IS ~iwd how totlm iwd2~ BEGIN
+	ACTION_IF GAME_IS ~iwd how totlm iwd2 iwd2_in_bg2~ BEGIN
 		OUTER_SPRINT ee ~non-ee~
 	END
-	
-	// remove bif directory
-	ACTION_IF (DIRECTORY_EXISTS ~%MOD_FOLDER%/bif~) BEGIN
-		ACTION_IF ~%WEIDU_OS%~ STR_EQ ~win32~ BEGIN
-			AT_NOW ~rmdir /s /q %MOD_FOLDER%\bif~ EXACT
-		END ELSE BEGIN //osx, unix
-			AT_NOW ~rm -rf %MOD_FOLDER%/bif~ EXACT
-		END
-	END
-	ACTION_IF ~%WEIDU_OS%~ STR_EQ ~win32~ BEGIN
-		AT_EXIT ~rmdir /s /q %MOD_FOLDER%\bif~ EXACT
-	END ELSE BEGIN //osx, unix
-		AT_EXIT ~rm -rf %MOD_FOLDER%/bif~ EXACT
-	END
-	ACTION_IF ~%WEIDU_OS%~ STR_EQ ~win32~ BEGIN
-		AT_UNINSTALL ~rmdir /s /q %MOD_FOLDER%\bif~ EXACT
-	END ELSE BEGIN //osx, unix
-		AT_UNINSTALL ~rm -rf %MOD_FOLDER%/bif~ EXACT
-	END
-	
+		
 	// remove old goidXXXX.bif or goiwXXXX.bif in data directory
 	// prevents a long loading time, if a bif file should still be present in the data folder during installation
 	// close the program (e.g. Near Infinity, weidu)
@@ -99,12 +83,6 @@ ALWAYS
 		IW1107 IW1201 IW3101 IW4001 IW5002 IW5101 IW5201 IW5202 IW5300 IW5302
 		IW6003 IW6004 IW6005 IW6006 IW6007 IW6010 IW6103 IW6503
 	END
-		// source file for windows and android
-	// standard is windows
-	ACTION_IF NOT VARIABLE_IS_SET one_time_execution BEGIN // check to make this happen only once per install
-		OUTER_SET one_time_execution = 1
-		OUTER_SPRINT graphic_files ~%MOD_FOLDER%/base~
-	END
 END
 
 
@@ -131,7 +109,7 @@ OUTER_SPRINT graphic_files ~%MOD_FOLDER%/base~
 
 BEGIN ~Icewind Dale Graphical Overhaul for Android~
 DESIGNATED 2 LABEL ~icewind_dale_graphical_overhaul_android~
-REQUIRE_PREDICATE (GAME_IS ~iwd_in_bg2 iwdee iwd2~ 
+REQUIRE_PREDICATE (GAME_IS ~iwdee~ 
 	OR MOD_IS_INSTALLED "setup-iwd1_eet.tp2" "1" 
 	OR MOD_IS_INSTALLED "setup-iwd2_eet.tp2" "0" )
 	~This mod is currently for IWD1_EET, IWD2_EET, IWDEE, IWD_in_BG2, IWD2, IWD2EE~
@@ -164,6 +142,12 @@ ACTION_IF MOD_IS_INSTALLED "setup-iwd2_eet.tp2" "0" BEGIN
 	OUTER_SET iwd2_eet = 1
 END
 
+// source file for windows is standard
+ACTION_IF !VARIABLE_IS_SET graphic_files BEGIN
+	OUTER_SPRINT graphic_files ~%MOD_FOLDER%/base~
+END
+
+// install the graphics
 LAF ~INSTALL_MAIN~ 
 	INT_VAR debug = 0 // list of all new used files
 	STR_VAR source_files = EVAL ~%graphic_files%~ 

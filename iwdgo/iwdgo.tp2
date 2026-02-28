@@ -27,21 +27,6 @@ ALWAYS
 		OUTER_SPRINT ee ~non-ee~
 	END
 		
-	// remove old goidXXXX.bif or goiwXXXX.bif in data directory
-	// prevents a long loading time, if a bif file should still be present in the data folder during installation
-	// close the program (e.g. Near Infinity, weidu)
-	ACTION_TRY
-		ACTION_BASH_FOR ~data~ ~^go.*\.bif$~ BEGIN
-			DELETE + ~%BASH_FOR_FILESPEC%~
-		END
-	WITH
-		DEFAULT
-			PRINT ~**********************************************************************************~
-			PRINT ~The %BASH_FOR_FILESPEC% is still in use by a program. e.g.: Near Infinity or WeiDU%LNL%Please close the programs and try again~
-			PRINT ~**********************************************************************************~
-			ACTION_RERAISE
-	END
-	
 	ACTION_DEFINE_ARRAY iwd1_areas BEGIN
 		//outdoor
 		ID1000 ID1100 ID1200 ID2000 ID2001 ID2100 ID3000 ID3600 ID4000 ID5000
@@ -82,6 +67,10 @@ ALWAYS
 		IW1002 IW1003 IW1004 IW1005 IW1006 IW1102 IW1103 IW1104 IW1105 IW1106
 		IW1107 IW1201 IW3101 IW4001 IW5002 IW5101 IW5201 IW5202 IW5300 IW5302
 		IW6003 IW6004 IW6005 IW6006 IW6007 IW6010 IW6103 IW6503
+	END
+	
+	ACTION_DEFINE_ARRAY iw_alternate BEGIN
+	
 	END
 END
 
@@ -133,6 +122,21 @@ REQUIRE_PREDICATE (GAME_IS ~iwd_in_bg2 iwdee iwd2~
 	OR MOD_IS_INSTALLED "setup-iwd2_eet.tp2" "0" )
 	~This mod is currently for IWD1_EET, IWD2_EET, IWDEE, IWD_in_BG2, IWD2, IWD2EE~
 
+// remove old goidXXXX.bif or goiwXXXX.bif in data directory
+	// prevents a long loading time, if a bif file should still be present in the data folder during installation
+	// close the program (e.g. Near Infinity, weidu)
+	ACTION_TRY
+		ACTION_BASH_FOR ~data~ ~^go.*\.bif$~ BEGIN
+			DELETE + ~%BASH_FOR_FILESPEC%~
+		END
+	WITH
+		DEFAULT
+			PRINT ~**********************************************************************************~
+			PRINT ~The %BASH_FOR_FILESPEC% is still in use by a program. e.g.: Near Infinity or WeiDU%LNL%Please close the programs and try again~
+			PRINT ~**********************************************************************************~
+			ACTION_RERAISE
+	END
+
 OUTER_SET iwd1_eet = 0
 OUTER_SET iwd2_eet = 0
 ACTION_IF MOD_IS_INSTALLED "setup-iwd1_eet.tp2" "1" BEGIN
@@ -143,12 +147,41 @@ ACTION_IF MOD_IS_INSTALLED "setup-iwd2_eet.tp2" "0" BEGIN
 END
 
 // source file for windows is standard
-ACTION_IF !VARIABLE_IS_SET graphic_files BEGIN
-	OUTER_SPRINT graphic_files ~%MOD_FOLDER%/base~
+ACTION_IF MOD_IS_INSTALLED "iwdgo.tp2" (ID_OF_LABEL "iwdgo.tp2" "icewind_dale_graphical_overhaul_android" ) BEGIN
+	OUTER_SPRINT graphic_files ~IWDGO-Android~
+END ELSE BEGIN
+	OUTER_SPRINT graphic_files ~%MOD_FOLDER%~
 END
 
 // install the graphics
 LAF ~INSTALL_MAIN~ 
 	INT_VAR debug = 0 // list of all new used files
-	STR_VAR source_files = EVAL ~%graphic_files%~ 
+	STR_VAR source_files = EVAL ~%graphic_files%~
+			base = ~base~
+END
+
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////                                                  \\\\\
+///// Alternative Graphics					           \\\\\
+/////                                                  \\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\/////\\\\\
+
+BEGIN ~Icewind Dale Graphical Overhaul Alternate Graphics~
+DESIGNATED 4 LABEL ~icewind_dale_graphical_overhaul_alternate~
+REQUIRE_PREDICATE MOD_IS_INSTALLED "iwdgo.tp2" (ID_OF_LABEL "iwdgo.tp2" "baldurs_gate_graphical_overhaul" ) ~Core component is required~
+REQUIRE_PREDICATE DIRECTORY_EXISTS ~%MOD_FOLDER%/alternate~ ~~
+// source file for windows is standard
+ACTION_IF MOD_IS_INSTALLED "iwdgo.tp2" (ID_OF_LABEL "iwdgo.tp2" "icewind_dale_graphical_overhaul_android" ) BEGIN
+	OUTER_SPRINT graphic_files ~IWDGO-Android~
+END ELSE BEGIN
+	OUTER_SPRINT graphic_files ~%MOD_FOLDER%~
+END
+
+// install the graphics
+LAF ~INSTALL_MAIN~ 
+	INT_VAR debug = 0 // list of all new used files
+	STR_VAR source_files = EVAL ~%graphic_files%~
+			base = ~alternate~
 END

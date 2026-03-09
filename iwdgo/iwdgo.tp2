@@ -72,8 +72,8 @@ ALWAYS
 	ACTION_DEFINE_ARRAY iw_alternate BEGIN
 	
 	END
-	ACTION_PHP_EACH iw_alternate AS num => area BEGIN
-		OUTER_SET num +=1 
+	ACTION_IF VARIABLE_IS_SET $iw_alternate(0) BEGIN
+		COPY_EXISTING ~misc01.itm~ ~%MOD_FOLDER%/alternate/iw_alternate.mrk~
 	END
 END
 
@@ -175,7 +175,7 @@ BEGIN ~Icewind Dale Graphical Overhaul Alternate Graphics~
 DESIGNATED 4 LABEL ~icewind_dale_graphical_overhaul_alternate~
 REQUIRE_PREDICATE MOD_IS_INSTALLED "iwdgo.tp2" (ID_OF_LABEL "iwdgo.tp2" "icewind_dale_graphical_overhaul" ) ~Core component is required~
 REQUIRE_PREDICATE DIRECTORY_EXISTS ~%MOD_FOLDER%/alternate~ ~~
-REQUIRE_PREDICATE IS_AN_INT num ~~
+REQUIRE_PREDICATE FILE_EXISTS ~%MOD_FOLDER%/alternate/iw_alternate.mrk~ ~~
 // source file for windows is standard
 ACTION_IF MOD_IS_INSTALLED "iwdgo.tp2" (ID_OF_LABEL "iwdgo.tp2" "icewind_dale_graphical_overhaul_android" ) BEGIN
 	OUTER_SPRINT graphic_files ~IWDGO-Android~
